@@ -11,9 +11,12 @@ def main():
 	obtainInput()
 	#getting random registers
 	regChs1 = ['s', 't']
-	reg1 = regChs1[random.randint(0, len(regChs1)-1)] + str(random.randint(0, 11))		
-	reg2 = regChs1[random.randint(0, len(regChs1)-1)] + str(random.randint(0, 11))
-	reg3 = regChs1[random.randint(0, len(regChs1)-1)] + str(random.randint(0, 11))
+	reg1 = regChs1[random.randint(0, len(regChs1)-1)]	
+	reg2 = regChs1[random.randint(0, len(regChs1)-1)]
+	reg3 = regChs1[random.randint(0, len(regChs1)-1)]
+	reg1 += str(random.randint(0, 11 if reg1=='s' else 6))
+	reg2 += str(random.randint(0, 11 if reg2=='s' else 6))
+	reg3 += str(random.randint(0, 11 if reg2=='s' else 6))
 	while(reg3 == reg2 and reg3 == reg1): reg3 = regChs1[random.randint(0, len(regChs1)-1)] + str(random.randint(0, 11))
 	print(
 		"Indicar las secuencias de bits correspondientes a la siguiente instruccion: \n\t\t" + 
