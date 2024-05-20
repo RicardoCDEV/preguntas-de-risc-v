@@ -4,7 +4,7 @@ import random
 gb_instructions = 0
 
 MIN_OP = 0
-MAX_OP = 9	# sltu
+MAX_OP = 17	# remu
 
 def main():
 	operation = random.randint(MIN_OP, MAX_OP)	#random register operation
