@@ -15,3 +15,5 @@ Por el monento hace falta:
 - agregar robustes en general,
 - agregar pseudo instrucciones,
 - hacer pruebas.
+
+El objetivo de este programa es aprender al menos una parte de los números que corresponden a los registros y a las partes de una instrucción. Archivo donde aparece información de las instrucciones y registros: https://github.com/jameslzhu/riscv-card/blob/master/riscv-card.pdf
