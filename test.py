@@ -46,7 +46,6 @@ def main():
 #	isReg: is to indicate if the aswer its about a register
 #	operation: works to indicate the random risc-v operation. if isReg is true, is used to pass the register
 def verifingAns(answer, operation, goodAnsMsj, badAnsMsj, isReg, datInsEle = False, numRep = False):
-	print(isReg)
 	if not isReg:
 		if answer == bin(int(gb_instructions[operation][datInsEle], numRep)):
 			print(goodAnsMsj)
