@@ -4,8 +4,9 @@ Lo que hace al ejecutarse es, generar una operación tipo registro aleatoria y p
 - código de función de 3 bits,
 - código de registro fuente 1,
 - código de registro fuente 2,
-- y código de función de 7 bits,
-todo debe de ser respondido en binario. Luego te indicará si tus respuestas son correctas o no.
+- y código de función de 7 bits.
+
+Todo debe de ser respondido en binario. Luego te indicará si tus respuestas son correctas o no.
 
 Por el monento hace falta:
 - agregar creación de preguntas sobre otros tipos de instrucciones para no punto flotante,
