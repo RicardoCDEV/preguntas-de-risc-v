@@ -17,3 +17,5 @@ Por el monento hace falta:
 - hacer pruebas.
 
 El objetivo de este programa es aprender al menos una parte de los números que corresponden a los registros y a las partes de una instrucción.
+
+Ojo: Este ccódigo usa "match" el cual fue introducido a en python 3.10, por lo que si tienes una versión inferior deberás actualizar.
