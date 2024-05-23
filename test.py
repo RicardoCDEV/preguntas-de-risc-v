@@ -11,20 +11,23 @@ def main():
 	obtainInput()
 	#getting random registers
 	regChs1 = ['s', 't']
-	reg1 = regChs1[random.randint(0, len(regChs1)-1)]	
+	reg1 = regChs1[random.randint(0, len(regChs1)-1)]
+	reg1 += str(random.randint(0, 11 if reg1=='s' else 6))	
 	reg2 = regChs1[random.randint(0, len(regChs1)-1)]
-	reg3 = regChs1[random.randint(0, len(regChs1)-1)]
-	reg1 += str(random.randint(0, 11 if reg1=='s' else 6))
 	reg2 += str(random.randint(0, 11 if reg2=='s' else 6))
-	reg3 += str(random.randint(0, 11 if reg2=='s' else 6))
+	if gb_instructions[operation][1] == 'I:
+		reg3 = regChs1[random.randint(0, len(regChs1)-1)]
+		reg3 += str(random.randint(0, 11 if reg2=='s' else 6))
 	while(reg3 == reg2 and reg3 == reg1): 
 		reg3 = regChs1[random.randint(0, len(regChs1)-1)]
 		reg3 += str(random.randint(0, 11 if reg2=='s' else 6))
 	print(
-		"Indicar las secuencias de bits correspondientes a la siguiente instruccion: \n\t\t" + 
+		"Indicar el tipo de operación y las secuencias de bits correspondientes a la siguiente instruccion: \n\t\t" + 
 		gb_instructions[operation][0] + ' ' + reg1 + ', ' + reg2 + ', ' + reg3
 	)
 	#getting answers from the terminal
+	print("Ingresar informacion: ")
+	opType = input("\t\tTipo de operacion: ")
 	opCode = bin(int(input("\t\tCodigo de operacion en binario: "), 2))
 	rd = bin(int(input("\t\tNumero del registro destino en binario: "), 2))
 	func3 = bin(int(input("\t\tCodigo de funcion de 3 bits en binario: "), 2))
@@ -32,17 +35,23 @@ def main():
 	rs2 = bin(int(input("\t\tNumero del registro fuente 2 en binario: "), 2))
 	func7 = bin(int(input("\t\tCodigo de funcion de 7 bits en binario: "), 2))
 	#verifing the if the answers are correct.
-	verifingAns(opCode, operation, "Codigo de operacion correcto", "Incorrecto.  Codigo de operacion correcto: ", False, 2, 2)
+	print("Resultados: ")
+	if opType == gb_instructions[operation][1]:
+		print("\t\tTipo de operacion correcto")
+	else:
+		print("\t\tIncorrecto. Tipo de operacion correcto: "+gb_instructions[operation][1])
+
+	verifingAns(opCode, operation, "\t\tCodigo de operacion correcto", "\t\tIncorrecto. Codigo de operacion correcto: ", False, 2, 2)
 	
-	verifingAns(rd, reg1, "Numero del registro destino correcto", "Incorrecto.  Numero del registro destino correcto: ", True)
+	verifingAns(rd, reg1, "\t\tNumero del registro destino correcto", "\t\tIncorrecto. Numero del registro destino correcto: ", True)
 	
-	verifingAns(func3, operation, "Codigo de funcion de 3 bits correcto", "Incorrecto.  Codigo de funcion de 3 bits correcto: ", False, 3, 16)
+	verifingAns(func3, operation, "\t\tCodigo de funcion de 3 bits correcto", "\t\tIncorrecto.  odigo de funcion de 3 bits correcto: ", False, 3, 16)
 	
-	verifingAns(rs1, reg2, "Numero del registro fuente 1 correcto", "Incorrecto.  Numero del registro fuente 1 correcto: ", True)
+	verifingAns(rs1, reg2, "\t\tNumero del registro fuente 1 correcto", "\t\tIncorrecto. Numero del registro fuente 1 correcto: ", True)
 	
-	verifingAns(rs2, reg3, "Numero del registro fuente 2 correcto", "Incorrecto.  Numero del registro fuente 2 correcto: ", True)
+	verifingAns(rs2, reg3, "\t\tNumero del registro fuente 2 correcto", "\t\tIncorrecto. Numero del registro fuente 2 correcto: ", True)
 	
-	verifingAns(func7, operation, "Codigo de funcion de 7 bits correcto", "Incorrecto.  Codigo de funcion de 7 bits correcto: ", False, 4, 16)
+	verifingAns(func7, operation, "\t\tCodigo de funcion de 7 bits correcto", "\t\tIncorrecto. Codigo de funcion de 7 bits correcto: ", False, 4, 16)
 	
 
 # Verify an asnwer
