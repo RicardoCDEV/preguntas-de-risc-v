@@ -4,42 +4,53 @@ import random
 gb_instructions = 0
 
 MIN_OP = 0
-MAX_OP = 17	# remu
+MAX_OP = 31	# lhu
+MAX_12_BIT_NUMBER = 4095
 
 def main():
-	operation = random.randint(MIN_OP, MAX_OP)	#random register operation
+	operation = random.randint(MIN_OP, MAX_OP)	#random operation
 	obtainInput()
+	operationType = gb_instructions[operation][1]
 	#getting random registers
 	regChs1 = ['s', 't']
 	reg1 = regChs1[random.randint(0, len(regChs1)-1)]
 	reg1 += str(random.randint(0, 11 if reg1=='s' else 6))	
 	reg2 = regChs1[random.randint(0, len(regChs1)-1)]
 	reg2 += str(random.randint(0, 11 if reg2=='s' else 6))
-	if gb_instructions[operation][1] == 'I:
-		reg3 = regChs1[random.randint(0, len(regChs1)-1)]
-		reg3 += str(random.randint(0, 11 if reg2=='s' else 6))
-	while(reg3 == reg2 and reg3 == reg1): 
-		reg3 = regChs1[random.randint(0, len(regChs1)-1)]
-		reg3 += str(random.randint(0, 11 if reg2=='s' else 6))
+	if operationType == 'I':
+		optr3 = random.randint(0, 4095)	# Generate a 12 bit number
+	else: # R type. Creation of the 3rd register
+		optr3 = regChs1[random.randint(0, len(regChs1)-1)]
+		optr3 += str(random.randint(0, 11 if reg2=='s' else 6))
+		while(optr3 == reg2 and optr3 == reg1): 
+			optr3 = regChs1[random.randint(0, len(regChs1)-1)]
+			optr3 += str(random.randint(0, 11 if reg2=='s' else 6))
 	print(
 		"Indicar el tipo de operación y las secuencias de bits correspondientes a la siguiente instruccion: \n\t\t" + 
-		gb_instructions[operation][0] + ' ' + reg1 + ', ' + reg2 + ', ' + reg3
+		gb_instructions[operation][0] + ' ' + reg1 + ', ' + reg2 + ', ' + get3rdOptr(optr3)
 	)
 	#getting answers from the terminal
 	print("Ingresar informacion: ")
 	opType = input("\t\tTipo de operacion: ")
 	opCode = bin(int(input("\t\tCodigo de operacion en binario: "), 2))
-	rd = bin(int(input("\t\tNumero del registro destino en binario: "), 2))
-	func3 = bin(int(input("\t\tCodigo de funcion de 3 bits en binario: "), 2))
-	rs1 = bin(int(input("\t\tNumero del registro fuente 1 en binario: "), 2))
-	rs2 = bin(int(input("\t\tNumero del registro fuente 2 en binario: "), 2))
-	func7 = bin(int(input("\t\tCodigo de funcion de 7 bits en binario: "), 2))
+	if operationType != 'S' or operationType != 'B':
+		rd = bin(int(input("\t\tNumero del registro destino en binario: "), 2))
+	if operationType != 'J' or operationType != 'U':
+		func3 = bin(int(input("\t\tCodigo de funcion de 3 bits en binario: "), 2))
+		rs1 = bin(int(input("\t\tNumero del registro fuente 1 en binario: "), 2))
+	if operationType == 'R' or operationType == 'I' or operationType == 'S' or operationType == 'B':
+		if operationType == 'I':
+			rs2 = bin(int(input("\t\tInmediato de 12 bits en binario: "), 2))
+		else:
+			rs2 = bin(int(input("\t\tNumero del registro fuente 2 en binario: "), 2))
+		if operationType == 'R':
+			func7 = bin(int(input("\t\tCodigo de funcion de 7 bits en binario: "), 2))
 	#verifing the if the answers are correct.
 	print("Resultados: ")
-	if opType == gb_instructions[operation][1]:
+	if opType == operationType:
 		print("\t\tTipo de operacion correcto")
 	else:
-		print("\t\tIncorrecto. Tipo de operacion correcto: "+gb_instructions[operation][1])
+		print("\t\tIncorrecto. Tipo de operacion correcto: "+operationType)
 
 	verifingAns(opCode, operation, "\t\tCodigo de operacion correcto", "\t\tIncorrecto. Codigo de operacion correcto: ", False, 2, 2)
 	
@@ -49,9 +60,15 @@ def main():
 	
 	verifingAns(rs1, reg2, "\t\tNumero del registro fuente 1 correcto", "\t\tIncorrecto. Numero del registro fuente 1 correcto: ", True)
 	
-	verifingAns(rs2, reg3, "\t\tNumero del registro fuente 2 correcto", "\t\tIncorrecto. Numero del registro fuente 2 correcto: ", True)
-	
-	verifingAns(func7, operation, "\t\tCodigo de funcion de 7 bits correcto", "\t\tIncorrecto. Codigo de funcion de 7 bits correcto: ", False, 4, 16)
+	if operationType == 'R' or operationType == 'I' or operationType == 'S' or operationType == 'B':
+		if operationType == 'I':
+			verifingAns(rs2, optr3, "\t\tInmediato de 12 bits correcto", "\t\tIncorrecto. Inmediato de 12 bits correcto: ", False)
+		else:
+			verifingAns(rs2, optr3, "\t\tNumero del registro fuente 2 correcto", "\t\tIncorrecto. Numero del registro fuente 2 correcto: ", True)
+
+		
+		if operationType == 'R':
+			verifingAns(func7, operation, "\t\tCodigo de funcion de 7 bits correcto", "\t\tIncorrecto. Codigo de funcion de 7 bits correcto: ", False, 4, 16)
 	
 
 # Verify an asnwer
@@ -61,7 +78,7 @@ def main():
 #	operation: works to indicate the random risc-v operation. if isReg is true, is used to pass the register
 def verifingAns(answer, operation, goodAnsMsj, badAnsMsj, isReg, datInsEle = False, numRep = False):
 	if not isReg:
-		if answer == bin(int(gb_instructions[operation][datInsEle], numRep)):
+		if (type(operation) is int and bin(operation) == answer) or answer == bin(int(gb_instructions[operation][datInsEle], numRep)):
 			print(goodAnsMsj)
 		else:
 			print(badAnsMsj+str(bin(int(gb_instructions[operation][datInsEle], numRep))))
@@ -116,5 +133,15 @@ def obtainRegNum(regAl):
 				case _:	
 					return int(ch2of2)+10	#a2-a7
 				
+
+# Return something depending on the type of the parameter, if is str means its a register so there's no changes, if is not a str return a positive number, or a negative number, or a hex number
+def get3rdOptr(optr3):
+	if type(optr3) is str:
+		return optr3
+	else:
+		if random.randint(0,1):
+			return str(optr3)
+		else:
+			return str(optr3-2**12 if optr3>2**11 else (str(optr3) if random.randint(0,1) else hex(optr3)))
 
 main()
